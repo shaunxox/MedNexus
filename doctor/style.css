@@ -1,0 +1,140 @@
+/* ════════════════════════════════════════
+   MEDNEXUS — doctor/style.css
+   ════════════════════════════════════════ */
+
+/* ── QUEUE LIST ── */
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+
+.queue-item:hover {
+  border-color: rgba(0,201,167,0.4);
+  transform: translateX(3px);
+}
+
+.queue-item.done {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.queue-item.done:hover {
+  border-color: var(--border);
+  transform: none;
+}
+
+.queue-token {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--teal);
+  min-width: 60px;
+}
+
+.queue-info {
+  flex: 1;
+}
+
+.queue-doctor {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 3px;
+}
+
+.queue-symptoms {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.4;
+  max-width: 500px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 120px;
+}
+
+.queue-wait {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.queue-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── ANALYSIS RESULT ── */
+.analysis-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.analysis-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.analysis-section-title {
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.analysis-content {
+  font-size: 0.9rem;
+  color: var(--white);
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+/* ── MEDICINE ROW ── */
+.medicine-row {
+  background: rgba(0,201,167,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.medicine-row-header {
+  margin-bottom: 12px;
+}
+
+.medicine-num {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.medicine-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── HIDDEN ── */
+.hidden { display: none !important; }

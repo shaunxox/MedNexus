@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedNexus — Patient Portal</title>
+  <link rel="stylesheet" href="../shared.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="../index.html" class="nav-logo">⬤ MedNexus</a>
+      <div class="nav-divider"></div>
+      <span class="nav-page-title">Patient Portal</span>
+    </div>
+    <div class="navbar-right">
+      <span class="nav-role-badge">🧑‍🦽 Patient</span>
+      <button class="btn-icon" id="themeToggle" title="Toggle theme">🌙</button>
+      <button class="btn-secondary" onclick="logout()" style="font-size:0.82rem;padding:7px 16px;">Logout</button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-content">
+
+      <div class="page-header">
+        <h1>Welcome, Patient</h1>
+        <p>How can MedNexus help you today?</p>
+      </div>
+
+      <div class="tabs" style="margin-bottom: 28px;">
+        <button class="tab-btn active" onclick="switchTab('chat')">💬 Symptom Chat</button>
+        <button class="tab-btn" onclick="switchTab('prescription')">💊 Prescription</button>
+        <button class="tab-btn" onclick="switchTab('token')">🎫 My Token</button>
+        <button class="tab-btn" onclick="switchTab('feedback')">⭐ Feedback</button>
+      </div>
+
+      <!-- TAB 1: SYMPTOM CHAT -->
+      <div id="tab-chat" class="tab-content">
+        <div class="grid-2" style="align-items: start;">
+          <div>
+            <div class="card-title">Chat with Patient Agent</div>
+            <div class="chat-container">
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-bubble ai">
+                  <div class="bubble-label">MedNexus Agent</div>
+                  Hello! I'm your MedNexus Patient Assistant. Please describe your symptoms and I'll help you find the right doctor. 🏥
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <textarea
+                  class="chat-input"
+                  id="chatInput"
+                  rows="1"
+                  placeholder="Describe your symptoms..."
+                  onkeydown="handleChatKey(event)"
+                ></textarea>
+                <button class="btn-primary" id="sendBtn" onclick="sendMessage()">Send</button>
+              </div>
+            </div>
+            <button class="btn-secondary" style="margin-top:10px;font-size:0.82rem;" onclick="resetChat()">🔄 New Conversation</button>
+          </div>
+
+          <div>
+            <div class="card-title">How it works</div>
+            <div class="how-it-works">
+              <div class="how-step">
+                <div class="how-num">1</div>
+                <div>
+                  <div class="how-title">Describe your symptoms</div>
+                  <div class="how-desc">Tell the agent what you're feeling — be as detailed as possible.</div>
+                </div>
+              </div>
+              <div class="how-step">
+                <div class="how-num">2</div>
+                <div>
+                  <div class="how-title">Answer follow-up questions</div>
+                  <div class="how-desc">The agent may ask a few questions to better understand your condition.</div>
+                </div>
+              </div>
+              <div class="how-step">
+                <div class="how-num">3</div>
+                <div>
+                  <div class="how-title">Get a doctor recommendation</div>
+                  <div class="how-desc">The agent will suggest which specialist you should see.</div>
+                </div>
+              </div>
+              <div class="how-step">
+                <div class="how-num">4</div>
+                <div>
+                  <div class="how-title">Confirm booking</div>
+                  <div class="how-desc">Say "yes" or "confirm" to book — your token is generated automatically.</div>
+                </div>
+              </div>
+            </div>
+            <div class="emergency-banner">
+              <span class="emergency-icon">🚨</span>
+              <div>
+                <div class="emergency-title">Emergency?</div>
+                <div class="emergency-desc">For chest pain, difficulty breathing or stroke symptoms — go to Emergency immediately or call 108.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PRESCRIPTION -->
+      <div id="tab-prescription" class="tab-content hidden">
+        <div class="grid-2" style="align-items: start;">
+          <div>
+            <div class="card-title">Paste Your Prescription</div>
+            <div class="card">
+              <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label">Prescription Text</label>
+                <textarea
+                  class="form-textarea"
+                  id="prescriptionInput"
+                  placeholder="Paste your prescription here...&#10;&#10;Example:&#10;Tab. Paracetamol 500mg - 1 tab twice daily after food&#10;Tab. Amoxicillin 250mg - 1 tab three times daily"
+                  style="min-height:200px;"
+                ></textarea>
+              </div>
+              <button class="btn-primary" onclick="summarizePrescription()" id="summarizeBtn">💊 Explain My Prescription</button>
+            </div>
+          </div>
+          <div>
+            <div class="card-title">AI Explanation</div>
+            <div class="card" id="prescriptionResult" style="min-height:200px;">
+              <div class="empty-state">
+                <div class="empty-icon">💊</div>
+                <p>Paste your prescription on the left and click explain — the AI will break it down in simple words.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: MY TOKEN -->
+      <div id="tab-token" class="tab-content hidden">
+        <div id="noToken">
+          <div class="empty-state" style="padding:80px 24px;">
+            <div class="empty-icon">🎫</div>
+            <p>No token booked yet. Use the Symptom Chat to book an appointment and get your token.</p>
+          </div>
+        </div>
+        <div id="tokenDisplay" class="hidden">
+          <div class="token-card">
+            <div class="token-header">
+              <div class="token-label">Your Token</div>
+              <div class="token-number" id="tokenNumber">#---</div>
+            </div>
+            <div class="token-details">
+              <div class="token-detail-item">
+                <div class="token-detail-label">Doctor</div>
+                <div class="token-detail-value" id="tokenDoctor">—</div>
+              </div>
+              <div class="token-detail-item">
+                <div class="token-detail-label">Specialty</div>
+                <div class="token-detail-value" id="tokenSpecialty">—</div>
+              </div>
+              <div class="token-detail-item">
+                <div class="token-detail-label">Position in Queue</div>
+                <div class="token-detail-value" id="tokenPosition">—</div>
+              </div>
+              <div class="token-detail-item">
+                <div class="token-detail-label">Estimated Wait</div>
+                <div class="token-detail-value" id="tokenWait">—</div>
+              </div>
+              <div class="token-detail-item">
+                <div class="token-detail-label">Status</div>
+                <div class="token-detail-value" id="tokenStatus">—</div>
+              </div>
+              <div class="token-detail-item">
+                <div class="token-detail-label">Booked At</div>
+                <div class="token-detail-value" id="tokenTime">—</div>
+              </div>
+            </div>
+            <div class="token-footer">
+              <button class="btn-secondary" onclick="refreshToken()">🔄 Refresh Status</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: FEEDBACK -->
+      <div id="tab-feedback" class="tab-content hidden">
+        <div style="max-width:520px;margin:0 auto;">
+          <div class="card-title">Rate Your Experience</div>
+          <div class="card">
+            <div class="form-group" style="margin-bottom:20px;">
+              <label class="form-label">How was your visit today?</label>
+              <div class="star-rating" id="starRating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+              </div>
+              <div class="rating-label" id="ratingLabel">Click a star to rate</div>
+            </div>
+            <div class="form-group" style="margin-bottom:20px;">
+              <label class="form-label">Comments (optional)</label>
+              <textarea class="form-textarea" id="feedbackComment" placeholder="Tell us about your experience..."></textarea>
+            </div>
+            <button class="btn-primary" onclick="submitFeedback()" id="feedbackBtn">Submit Feedback</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

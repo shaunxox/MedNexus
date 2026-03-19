@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedNexus — Admin Dashboard</title>
+  <link rel="stylesheet" href="../shared.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="../index.html" class="nav-logo">⬤ MedNexus</a>
+      <div class="nav-divider"></div>
+      <span class="nav-page-title">Admin Dashboard</span>
+    </div>
+    <div class="navbar-right">
+      <span class="nav-role-badge">🏥 Admin</span>
+      <button class="btn-icon" id="themeToggle" title="Toggle theme">🌙</button>
+      <button class="btn-secondary" onclick="logout()" style="font-size:0.82rem;padding:7px 16px;">Logout</button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-content">
+
+      <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>Monitor hospital operations, manage doctors and view feedback.</p>
+      </div>
+
+      <!-- STATS CARDS -->
+      <div class="grid-4" style="margin-bottom:28px;">
+        <div class="stat-card">
+          <div class="stat-label">Available Beds</div>
+          <div class="stat-value" id="statBeds">—</div>
+          <div class="stat-sub" id="statBedsTotal">out of — total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">ICU Available</div>
+          <div class="stat-value" id="statIcu">—</div>
+          <div class="stat-sub" id="statIcuTotal">out of — total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Doctors on Duty</div>
+          <div class="stat-value" id="statDoctors">—</div>
+          <div class="stat-sub">active right now</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Patients in Queue</div>
+          <div class="stat-value" id="statQueue">—</div>
+          <div class="stat-sub" id="statEmergency">— emergency cases</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs" style="margin-bottom:28px;">
+        <button class="tab-btn active" onclick="switchTab('queue', event)">📋 Live Queue</button>
+        <button class="tab-btn" onclick="switchTab('doctors', event)">👨‍⚕️ Manage Doctors</button>
+        <button class="tab-btn" onclick="switchTab('feedback', event)">⭐ Feedback</button>
+        <button class="tab-btn" onclick="switchTab('chat', event)">🤖 AI Assistant</button>
+      </div>
+
+      <!-- TAB 1: LIVE QUEUE -->
+      <div id="tab-queue" class="tab-content">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <div class="card-title" style="margin-bottom:0;">Live Patient Queue</div>
+          <button class="btn-secondary" onclick="loadQueue()" style="font-size:0.82rem;padding:7px 16px;">🔄 Refresh</button>
+        </div>
+        <div id="queueList">
+          <div class="empty-state">
+            <div class="empty-icon">⏳</div>
+            <p>Loading queue...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: MANAGE DOCTORS -->
+      <div id="tab-doctors" class="tab-content hidden">
+        <div class="grid-2" style="align-items:start;">
+
+          <!-- Add Doctor Form -->
+          <div>
+            <div class="card-title">Add New Doctor</div>
+            <div class="card">
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Full Name</label>
+                <input class="form-input" id="docName" placeholder="e.g. Dr. Anita Shetty"/>
+              </div>
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Specialty</label>
+                <input class="form-input" id="docSpecialty" placeholder="e.g. Cardiology"/>
+              </div>
+              <div class="form-group" style="margin-bottom:20px;">
+                <label class="form-label">Contact Number</label>
+                <input class="form-input" id="docContact" placeholder="e.g. 9876543210"/>
+              </div>
+              <button class="btn-primary" onclick="addDoctor()" id="addDoctorBtn" style="width:100%;">
+                + Add Doctor
+              </button>
+            </div>
+          </div>
+
+          <!-- Doctor List -->
+          <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <div class="card-title" style="margin-bottom:0;">Doctor List</div>
+              <button class="btn-secondary" onclick="loadDoctors()" style="font-size:0.82rem;padding:7px 16px;">🔄 Refresh</button>
+            </div>
+            <div id="doctorList">
+              <div class="empty-state">
+                <div class="empty-icon">👨‍⚕️</div>
+                <p>Loading doctors...</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 3: FEEDBACK -->
+      <div id="tab-feedback" class="tab-content hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <div class="card-title" style="margin-bottom:0;">Patient Feedback</div>
+          <button class="btn-secondary" onclick="loadFeedback()" style="font-size:0.82rem;padding:7px 16px;">🔄 Refresh</button>
+        </div>
+        <div id="feedbackStats" style="margin-bottom:20px;"></div>
+        <div id="feedbackList">
+          <div class="empty-state">
+            <div class="empty-icon">⭐</div>
+            <p>Loading feedback...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: AI ASSISTANT -->
+      <div id="tab-chat" class="tab-content hidden">
+        <div class="grid-2" style="align-items:start;">
+          <div>
+            <div class="card-title">Ask the Admin Agent</div>
+            <div class="chat-container">
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-bubble ai">
+                  <div class="bubble-label">Admin Agent</div>
+                  Hello! I'm your MedNexus Admin Assistant. Ask me anything about hospital operations — bed availability, queue status, staff, or resource optimization. 🏥
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <textarea
+                  class="chat-input"
+                  id="chatInput"
+                  rows="1"
+                  placeholder="Ask about beds, queue, staff..."
+                  onkeydown="handleChatKey(event)"
+                ></textarea>
+                <button class="btn-primary" id="sendBtn" onclick="sendMessage()">Send</button>
+              </div>
+            </div>
+            <button class="btn-secondary" style="margin-top:10px;font-size:0.82rem;" onclick="resetChat()">🔄 New Conversation</button>
+          </div>
+
+          <div>
+            <div class="card-title">Quick Questions</div>
+            <div class="quick-questions">
+              <button class="quick-btn" onclick="askQuick('How many beds are available right now?')">🛏️ Bed availability</button>
+              <button class="quick-btn" onclick="askQuick('How many patients are currently in the queue?')">👥 Queue status</button>
+              <button class="quick-btn" onclick="askQuick('How many doctors are on duty today?')">👨‍⚕️ Doctors on duty</button>
+              <button class="quick-btn" onclick="askQuick('How many ICU beds are available?')">🏥 ICU status</button>
+              <button class="quick-btn" onclick="askQuick('Give me a summary of today\\'s hospital operations.')">📊 Daily summary</button>
+              <button class="quick-btn" onclick="askQuick('Are there any critical resource shortages I should know about?')">⚠️ Critical alerts</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

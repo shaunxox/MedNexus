@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedNexus — AI Hospital Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="logo"><span class="logo-dot"></span> MedNexus</a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-login" onclick="openLogin()">Login →</button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span></span> AI-Powered Healthcare</div>
+    <h1>The Future of<br>Hospital Intelligence</h1>
+    <p class="hero-sub">MedNexus uses multi-agent AI to streamline every part of hospital operations — from patient check-in to doctor diagnosis support to real-time resource management.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Get Started</button>
+      <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-val">3</div><div class="stat-label">AI Agents</div></div>
+      <div><div class="stat-val">24/7</div><div class="stat-label">Availability</div></div>
+      <div><div class="stat-val">100%</div><div class="stat-label">Automated Workflows</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-tag">About MedNexus</div>
+  <h2 class="section-title">Three Agents. One Seamless System.</h2>
+  <p class="section-sub">MedNexus connects patients, doctors, and administrators through dedicated AI agents that talk to each other — replacing manual coordination with intelligent automation.</p>
+  <div class="about-grid">
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <div><div class="step-title">Patient describes symptoms</div><div class="step-desc">The Patient Agent collects symptoms, books appointments, and sends reminders — all through a simple chat interface.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <div><div class="step-title">AI prepares the doctor</div><div class="step-desc">Before the appointment, the Doctor Agent summarizes the patient's history and suggests possible diagnoses based on symptoms and past records.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <div><div class="step-title">Resources assigned automatically</div><div class="step-desc">The Admin Agent checks bed availability, assigns rooms, and updates staff schedules — no manual coordination needed.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">04</div>
+        <div><div class="step-title">Feedback loop closes</div><div class="step-desc">Post-visit, patient records are updated, follow-ups are scheduled, and the system learns for next time.</div></div>
+      </div>
+    </div>
+    <div class="about-card">
+      <h3>The Three Agents</h3>
+      <div class="agent-pill patient"><span class="dot"></span><div><div>Patient Agent</div><div class="agent-desc">Symptoms · Booking · Reminders · Navigation</div></div></div>
+      <div class="agent-pill doctor"><span class="dot"></span><div><div>Doctor Agent ⭐</div><div class="agent-desc">History Summary · Diagnosis Suggestions · Treatment Planning</div></div></div>
+      <div class="agent-pill admin"><span class="dot"></span><div><div>Admin Agent</div><div class="agent-desc">Bed Availability · Staff Scheduling · Resource Allocation</div></div></div>
+      <div class="about-note">All three agents are powered by the same underlying AI and share context with each other — so every part of the hospital is always in sync.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">What We Offer</div>
+  <h2 class="section-title">Services Built for Every Role</h2>
+  <p class="section-sub">Whether you're a patient, a clinician, or a hospital administrator — MedNexus has a dedicated workflow for you.</p>
+  <div class="services-grid">
+    <div class="service-card"><div class="service-icon">🩺</div><div class="service-title">Symptom Analysis</div><div class="service-desc">AI-driven preliminary analysis based on symptoms entered by the patient, giving doctors a head start before the visit.</div></div>
+    <div class="service-card"><div class="service-icon">📅</div><div class="service-title">Smart Scheduling</div><div class="service-desc">Automated appointment booking that considers doctor availability, room assignments, and patient urgency in real time.</div></div>
+    <div class="service-card"><div class="service-icon">📋</div><div class="service-title">Patient History Summaries</div><div class="service-desc">Doctors receive concise AI-generated summaries of patient records before each consultation — no manual chart reading.</div></div>
+    <div class="service-card"><div class="service-icon">🛏️</div><div class="service-title">Bed & Resource Management</div><div class="service-desc">Real-time tracking of bed availability, medical equipment, and ward capacity — updated automatically as patients move through the system.</div></div>
+    <div class="service-card"><div class="service-icon">👨‍⚕️</div><div class="service-title">Staff Scheduling</div><div class="service-desc">The Admin Agent optimizes shift planning and staff allocation based on patient load, specialization needs, and availability.</div></div>
+    <div class="service-card"><div class="service-icon">🔔</div><div class="service-title">Reminders & Follow-ups</div><div class="service-desc">Patients receive automated reminders for appointments, medications, and follow-up visits — reducing no-shows significantly.</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <h2 class="section-title">Contact Us</h2>
+  <p class="section-sub">Interested in MedNexus for your hospital? Reach out and our team will get back to you within 24 hours.</p>
+  <div class="contact-grid">
+    <div class="contact-info-block">
+      <div class="contact-item"><div class="contact-icon">📞</div><div><div class="contact-label">Phone</div><div class="contact-val">+91 98765 43210</div></div></div>
+      <div class="contact-item"><div class="contact-icon">📧</div><div><div class="contact-label">Email</div><div class="contact-val">hello@mednexus.ai</div></div></div>
+      <div class="contact-item"><div class="contact-icon">📍</div><div><div class="contact-label">Location</div><div class="contact-val">Mangaluru, Karnataka, India</div></div></div>
+      <div class="contact-item"><div class="contact-icon">🕐</div><div><div class="contact-label">Support Hours</div><div class="contact-val">Mon – Sat, 9:00 AM – 6:00 PM IST</div></div></div>
+    </div>
+    <div class="contact-form">
+      <input type="text" placeholder="Your Name">
+      <input type="email" placeholder="Email Address">
+      <input type="text" placeholder="Hospital / Organization Name">
+      <textarea placeholder="Tell us about your hospital and what you need..."></textarea>
+      <button class="btn-primary">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">MedNexus</span> &nbsp;·&nbsp; AI Hospital Management &nbsp;·&nbsp; © 2025 &nbsp;·&nbsp; Built for better healthcare
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLogin()">×</button>
+    <h2>Welcome to MedNexus</h2>
+    <p class="modal-sub">Select your role to continue</p>
+    <div class="role-cards">
+      <a href="#" class="role-card patient" onclick="selectRole('patient')">
+        <span class="role-emoji">🧑‍🦽</span>
+        <div><div class="role-name">Patient</div><div class="role-hint">Book appointments, track health</div></div>
+        <span class="role-arrow">→</span>
+      </a>
+      <a href="#" class="role-card doctor" onclick="selectRole('doctor')">
+        <span class="role-emoji">👨‍⚕️</span>
+        <div><div class="role-name">Doctor</div><div class="role-hint">View patient queue, diagnose</div></div>
+        <span class="role-arrow">→</span>
+      </a>
+      <a href="#" class="role-card admin" onclick="selectRole('admin')">
+        <span class="role-emoji">🏥</span>
+        <div><div class="role-name">Administrator</div><div class="role-hint">Manage resources, staff, beds</div></div>
+        <span class="role-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedNexus — Doctor Dashboard</title>
+  <link rel="stylesheet" href="../shared.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="../index.html" class="nav-logo">⬤ MedNexus</a>
+      <div class="nav-divider"></div>
+      <span class="nav-page-title">Doctor Dashboard</span>
+    </div>
+    <div class="navbar-right">
+      <span class="nav-role-badge">👨‍⚕️ Doctor</span>
+      <button class="btn-icon" id="themeToggle" title="Toggle theme">🌙</button>
+      <button class="btn-secondary" onclick="logout()" style="font-size:0.82rem;padding:7px 16px;">Logout</button>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-content">
+
+      <div class="page-header">
+        <h1>Doctor Dashboard</h1>
+        <p>View your patient queue and get AI-powered clinical analysis.</p>
+      </div>
+
+      <div class="tabs" style="margin-bottom: 28px;">
+        <button class="tab-btn active" onclick="switchTab('queue', event)">🏥 Patient Queue</button>
+        <button class="tab-btn" onclick="switchTab('analysis', event)">🧠 AI Analysis</button>
+        <button class="tab-btn" onclick="switchTab('prescription', event)">📋 Write Prescription</button>
+      </div>
+
+      <!-- TAB 1: PATIENT QUEUE -->
+      <div id="tab-queue" class="tab-content">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <div class="card-title" style="margin-bottom:0;">Today's Queue</div>
+          <button class="btn-secondary" onclick="loadQueue()" style="font-size:0.82rem;padding:7px 16px;">🔄 Refresh</button>
+        </div>
+        <div id="queueList">
+          <div class="empty-state">
+            <div class="empty-icon">⏳</div>
+            <p>Loading patient queue...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: AI ANALYSIS -->
+      <div id="tab-analysis" class="tab-content hidden">
+        <div class="grid-2" style="align-items:start;">
+
+          <div>
+            <div class="card-title">Patient Information</div>
+            <div class="card">
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Selected Patient</label>
+                <input class="form-input" id="selectedPatient" placeholder="Select a patient from the queue..." readonly/>
+              </div>
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Reported Symptoms</label>
+                <textarea class="form-textarea" id="patientSymptoms" placeholder="Patient symptoms will appear here when selected from queue, or type manually..." style="min-height:120px;"></textarea>
+              </div>
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Additional Notes (optional)</label>
+                <textarea class="form-textarea" id="doctorNotes" placeholder="Add any additional observations or patient history..." style="min-height:80px;"></textarea>
+              </div>
+              <button class="btn-primary" onclick="analyzePatient()" id="analyzeBtn" style="width:100%;">
+                🧠 Analyze with AI
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div class="card-title">AI Clinical Analysis</div>
+            <div class="card" id="analysisResult" style="min-height:300px;">
+              <div class="empty-state">
+                <div class="empty-icon">🧠</div>
+                <p>Select a patient from the queue and click "Analyze with AI" to get a clinical summary and diagnosis suggestions.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 3: WRITE PRESCRIPTION -->
+      <div id="tab-prescription" class="tab-content hidden">
+        <div style="max-width:640px; margin:0 auto;">
+          <div class="card-title">Write Prescription</div>
+          <div class="card">
+
+            <div class="form-group" style="margin-bottom:14px;">
+              <label class="form-label">Patient Token</label>
+              <input class="form-input" id="prescPatient" placeholder="Enter token number (e.g. 247)"/>
+            </div>
+
+            <div class="divider"></div>
+
+            <div id="medicineList">
+              <div class="medicine-row" id="medicine-0">
+                <div class="medicine-row-header">
+                  <span class="medicine-num">Medicine 1</span>
+                </div>
+                <div class="medicine-fields">
+                  <div class="form-group">
+                    <label class="form-label">Medicine Name</label>
+                    <input class="form-input" placeholder="e.g. Paracetamol 500mg"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Dosage</label>
+                    <input class="form-input" placeholder="e.g. 1 tablet"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Frequency</label>
+                    <select class="form-select">
+                      <option>Once daily</option>
+                      <option>Twice daily</option>
+                      <option>Three times daily</option>
+                      <option>Four times daily</option>
+                      <option>At night</option>
+                      <option>As needed</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Duration</label>
+                    <input class="form-input" placeholder="e.g. 5 days"/>
+                  </div>
+                  <div class="form-group" style="grid-column: span 2;">
+                    <label class="form-label">Instructions</label>
+                    <input class="form-input" placeholder="e.g. Take after food, avoid alcohol"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button class="btn-secondary" onclick="addMedicine()" style="font-size:0.85rem;">+ Add Medicine</button>
+              <button class="btn-danger" onclick="removeMedicine()" style="font-size:0.85rem;">− Remove Last</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="form-group" style="margin-bottom:16px;">
+              <label class="form-label">Doctor's Notes</label>
+              <textarea class="form-textarea" id="prescNotes" placeholder="Additional instructions, follow-up date, diet restrictions..."></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="savePrescription()" id="savePresBtn" style="width:100%;">
+              💾 Save Prescription
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
