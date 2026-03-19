@@ -232,7 +232,7 @@ def patient_agent():
                 "symptoms":  message,
                 "status":    "waiting",
                 "position":  position,
-                "wait_time": position * 15,
+                "wait_time": position * 6,
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M")
             }
             data["queue"].append(token)
