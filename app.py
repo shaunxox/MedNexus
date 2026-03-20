@@ -16,7 +16,7 @@ CORS(app, origins="*")
 #  OPENROUTER CONFIG
 # ════════════════════════════════════════
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.getenv("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")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 MODEL_NAME = "meta-llama/llama-3.3-70b-instruct:free"
