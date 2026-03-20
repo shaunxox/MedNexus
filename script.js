@@ -2,7 +2,7 @@
 //  MEDNEXUS — script.js (Landing Page)
 // ════════════════════════════════════════
 
-const API = 'https://mednexus-tuz3.onrender.com';
+const API = 'https://mednexus-f0i6.onrender.com';
 
 // ── THEME TOGGLE ──
 function toggleTheme() {

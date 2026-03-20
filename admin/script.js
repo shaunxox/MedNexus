@@ -17,7 +17,7 @@ function logout() {
   window.location.href = '../index.html';
 }
 
-const API = 'https://mednexus-tuz3.onrender.com';
+const API = 'https://mednexus-f0i6.onrender.com';
 
 // ── THEME TOGGLE ──
 const themeToggle = document.getElementById('themeToggle');

@@ -138,7 +138,7 @@ def openrouter_chat(messages, model):
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://mednexus-tuz3.onrender.com",
+        "HTTP-Referer": "https://mednexus-f0i6.onrender.com",
         "X-Title": "MedNexus"
     }
 
