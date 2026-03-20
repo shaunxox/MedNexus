@@ -315,5 +315,16 @@ function showToast(message, type = 'success') {
   setTimeout(() => toast.remove(), 3500);
 }
 
+// ════════════════════════════════════════
+//  AUTO-REFRESH — Token status every 15s
+//  Only refreshes if token tab is active
+// ════════════════════════════════════════
+
+setInterval(() => {
+  if (!document.getElementById('tab-token').classList.contains('hidden')) {
+    refreshToken();
+  }
+}, 15000);
+
 // Load token on page open
 refreshToken();

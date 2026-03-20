@@ -308,5 +308,16 @@ function showToast(message, type = 'success') {
   setTimeout(() => toast.remove(), 3500);
 }
 
+// ════════════════════════════════════════
+//  AUTO-REFRESH — Queue every 20s
+//  Only refreshes if queue tab is active
+// ════════════════════════════════════════
+
+setInterval(() => {
+  if (!document.getElementById('tab-queue').classList.contains('hidden')) {
+    loadQueue();
+  }
+}, 20000);
+
 // Load queue on page open
 loadQueue();
