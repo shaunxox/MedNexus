@@ -19,8 +19,8 @@ CORS(app, origins="*")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-MODEL_NAME = "mistralai/mistral-7b-instruct:free"
-FALLBACK_MODEL = "meta-llama/llama-3-8b-instruct:free"
+MODEL_NAME = "meta-llama/llama-4-maverick:free"
+FALLBACK_MODEL = "mistralai/mistral-small-3.1-24b-instruct:free"
 
 # ════════════════════════════════════════
 #  HARDCODED PASSWORDS FOR DOCTOR & ADMIN
