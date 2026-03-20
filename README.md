@@ -1,4 +1,4 @@
-# MedNexus — AI Hospital Management System
+# MedNexus — The Future of Hospital Intelligence
 
 > Multi-agent AI platform connecting patients, doctors, and hospital administrators through dedicated LLM-powered workflows.
 
@@ -231,6 +231,4 @@ Chat histories are reset per-session and can be explicitly cleared via `POST /ap
 
 ---
 
-## License
 
-MIT
