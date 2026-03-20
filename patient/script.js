@@ -8,7 +8,7 @@ function logout() {
   window.location.href = '../index.html';
 }
 
-const API = 'http://localhost:5000';
+const API = 'https://mednexus-tuz3.onrender.com';
 let selectedRating = 0;
 let currentToken = null;
 
