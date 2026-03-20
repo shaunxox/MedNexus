@@ -1,4 +1,4 @@
-# MedNexus — The Future of Hospital Intelligence 
+# MedNexus — AI Hospital Management System
 
 > Multi-agent AI platform connecting patients, doctors, and hospital administrators through dedicated LLM-powered workflows.
 
@@ -30,6 +30,18 @@ MedNexus is a full-stack hospital management system built with a vanilla HTML/CS
 - Doctor roster management — add, remove, toggle on/off duty
 - Full patient queue overview
 - Feedback review panel
+
+---
+
+## Default Credentials
+
+| Role | Login |
+|---|---|
+| Patient | Register via the landing page |
+| Doctor | Password: `doctor@mednexus` |
+| Admin | Password: `admin@mednexus` |
+
+> Passwords are hardcoded in `app.py`. Patient passwords are stored in plaintext in `data.json`. This is a prototype — do not use in production.
 
 ---
 
@@ -171,18 +183,6 @@ npx serve .
 
 ---
 
-## Default Credentials
-
-| Role | Login |
-|---|---|
-| Patient | Register via the landing page |
-| Doctor | Password: `doctor@mednexus` |
-| Admin | Password: `admin@mednexus` |
-
-> Passwords are hardcoded in `app.py`. Patient passwords are stored in plaintext in `data.json`. This is a prototype — do not use in production.
-
----
-
 ## Data Schema (`data.json`)
 
 ```json
@@ -224,4 +224,6 @@ Chat histories are reset per-session and can be explicitly cleared via `POST /ap
 
 ---
 
+## License
 
+MIT
