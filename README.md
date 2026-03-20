@@ -224,6 +224,4 @@ Chat histories are reset per-session and can be explicitly cleared via `POST /ap
 
 ---
 
-## License
 
-MIT
