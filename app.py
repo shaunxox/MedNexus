@@ -6,6 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from groq import Groq
 
 load_dotenv()
 
@@ -13,18 +14,14 @@ app = Flask(__name__)
 CORS(app, origins="*")
 
 # ════════════════════════════════════════
-#  OPENROUTER CONFIG
+#  GROQ CONFIG
 # ════════════════════════════════════════
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-
-MODEL_NAME = "z-ai/glm-4.5-air:free"
-FALLBACK_MODEL = "arcee-ai/arcee-trinity-mini:fre"
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL_NAME = "llama-3.3-70b-versatile"
 
 # ════════════════════════════════════════
 #  HARDCODED PASSWORDS FOR DOCTOR & ADMIN
-#  (Share these in your README privately)
 # ════════════════════════════════════════
 
 DOCTOR_PASSWORD = "doctor@mednexus"
@@ -131,29 +128,8 @@ chat_histories = {
 }
 
 # ════════════════════════════════════════
-#  OPENROUTER CHAT FUNCTION
+#  GROQ CHAT FUNCTION
 # ════════════════════════════════════════
-
-def openrouter_chat(messages, model):
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://mednexus-f0i6.onrender.com",
-        "X-Title": "MedNexus"
-    }
-
-    response = requests.post(
-        OPENROUTER_URL,
-        headers=headers,
-        json={
-            "model": model,
-            "messages": messages
-        },
-        timeout=30
-    )
-
-    return response.json()
-
 
 def chat_with_agent(agent, user_message, system_prompt):
     try:
@@ -169,13 +145,14 @@ def chat_with_agent(agent, user_message, system_prompt):
 
         messages.append({"role": "user", "content": user_message})
 
-        data = openrouter_chat(messages, MODEL_NAME)
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=messages,
+            max_tokens=1024,
+            temperature=0.7
+        )
 
-        if "error" in data:
-            print(f"Primary model failed: {data['error']} — trying fallback")
-            data = openrouter_chat(messages, FALLBACK_MODEL)
-
-        reply = data["choices"][0]["message"]["content"]
+        reply = response.choices[0].message.content
 
         chat_histories[agent].append({"role": "user", "content": user_message})
         chat_histories[agent].append({"role": "assistant", "content": reply})
@@ -409,11 +386,13 @@ Prescription:
 {prescription}
 """
     try:
-        messages = [{"role": "user", "content": prompt}]
-        data = openrouter_chat(messages, MODEL_NAME)
-        if "error" in data:
-            data = openrouter_chat(messages, FALLBACK_MODEL)
-        reply = data["choices"][0]["message"]["content"]
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=1024,
+            temperature=0.7
+        )
+        reply = response.choices[0].message.content
         return jsonify({"reply": reply.strip()})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -551,10 +530,8 @@ def reset_chat(agent):
 def home():
     return jsonify({
         "status": "MedNexus running 🚀",
-        "models": {
-            "primary":  MODEL_NAME,
-            "fallback": FALLBACK_MODEL
-        }
+        "model": MODEL_NAME,
+        "engine": "Groq"
     })
 
 # ════════════════════════════════════════
@@ -562,9 +539,8 @@ def home():
 # ════════════════════════════════════════
 
 if __name__ == "__main__":
-    print("🚀 MedNexus running with OpenRouter")
-    print(f"   Primary model  : {MODEL_NAME}")
-    print(f"   Fallback model : {FALLBACK_MODEL}")
+    print("🚀 MedNexus running with Groq")
+    print(f"   Model          : {MODEL_NAME}")
     print(f"   Doctor password: {DOCTOR_PASSWORD}")
     print(f"   Admin password : {ADMIN_PASSWORD}")
     port = int(os.environ.get("PORT", 5000))
