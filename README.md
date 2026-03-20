@@ -2,6 +2,13 @@
 
 > Multi-agent AI platform connecting patients, doctors, and hospital administrators through dedicated LLM-powered workflows.
 
+**Live Demo**
+
+| | Link |
+|---|---|
+| Frontend | [shaunxox.github.io/MedNexus](https://shaunxox.github.io/MedNexus) |
+| Backend API | [mednexus-f0i6.onrender.com](https://mednexus-f0i6.onrender.com/) |
+
 ---
 
 ## Overview
