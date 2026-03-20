@@ -107,7 +107,7 @@ def openrouter_chat(messages, model):
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:5000",
+        "HTTP-Referer": "https://mednexus-tuz3.onrender.com",  # ✅ Fixed
         "X-Title": "MedNexus"
     }
 
@@ -227,6 +227,7 @@ def patient():
                 "token": random.randint(100, 999),
                 "doctor": doctor.strip(),
                 "specialty": specialty.strip(),
+                "symptoms": msg,
                 "status": "waiting",
                 "position": len(data["queue"]) + 1,
                 "wait_time": len(data["queue"]) * 15
@@ -269,7 +270,129 @@ def admin():
 
 @app.route("/api/queue", methods=["GET"])
 def queue():
-    return jsonify(read_data()["queue"])
+    return jsonify({"queue": read_data()["queue"]})  # ✅ Fixed
+
+@app.route("/api/queue/done/<int:token>", methods=["POST"])
+def queue_done(token):
+    data = read_data()
+    for item in data["queue"]:
+        if item["token"] == token:
+            item["status"] = "done"
+            break
+    write_data(data)
+    return jsonify({"status": "updated"})
+
+# ════════════════════════════════════════
+#  PRESCRIPTION
+# ════════════════════════════════════════
+
+@app.route("/api/prescription", methods=["GET"])
+def get_prescription():
+    token = request.args.get("token", type=int)
+    data = read_data()
+    for item in data["queue"]:
+        if item["token"] == token:
+            return jsonify({"prescription": item.get("prescription", None)})
+    return jsonify({"prescription": None})
+
+@app.route("/api/prescription/save", methods=["POST"])
+def save_prescription():
+    body = request.get_json()
+    token = body.get("token")
+    prescription = body.get("prescription")
+    data = read_data()
+    for item in data["queue"]:
+        if item["token"] == token:
+            item["prescription"] = prescription
+            break
+    write_data(data)
+    return jsonify({"status": "saved"})
+
+# ════════════════════════════════════════
+#  STATS
+# ════════════════════════════════════════
+
+@app.route("/api/stats", methods=["GET"])
+def stats():
+    data = read_data()
+    return jsonify(data["stats"])
+
+# ════════════════════════════════════════
+#  DOCTORS
+# ════════════════════════════════════════
+
+@app.route("/api/doctors", methods=["GET"])
+def get_doctors():
+    data = read_data()
+    return jsonify({"doctors": data["doctors"]})
+
+@app.route("/api/doctors/add", methods=["POST"])
+def add_doctor():
+    body = request.get_json()
+    data = read_data()
+    doctor = {
+        "id": len(data["doctors"]) + 1,
+        "name": body.get("name"),
+        "specialty": body.get("specialty"),
+        "status": "on_duty"
+    }
+    data["doctors"].append(doctor)
+    write_data(data)
+    return jsonify({"status": "added", "doctor": doctor})
+
+@app.route("/api/doctors/remove/<int:id>", methods=["DELETE"])
+def remove_doctor(id):
+    data = read_data()
+    data["doctors"] = [d for d in data["doctors"] if d["id"] != id]
+    write_data(data)
+    return jsonify({"status": "removed"})
+
+@app.route("/api/doctors/toggle/<int:id>", methods=["POST"])
+def toggle_doctor(id):
+    data = read_data()
+    for d in data["doctors"]:
+        if d["id"] == id:
+            d["status"] = "off_duty" if d["status"] == "on_duty" else "on_duty"
+            break
+    write_data(data)
+    return jsonify({"status": "toggled"})
+
+# ════════════════════════════════════════
+#  FEEDBACK
+# ════════════════════════════════════════
+
+@app.route("/api/feedback", methods=["POST"])
+def submit_feedback():
+    body = request.get_json()
+    data = read_data()
+    if "feedback" not in data:
+        data["feedback"] = []
+    data["feedback"].append({
+        "token": body.get("token"),
+        "message": body.get("message"),
+        "timestamp": datetime.now().isoformat()
+    })
+    write_data(data)
+    return jsonify({"status": "submitted"})
+
+@app.route("/api/feedback/all", methods=["GET"])
+def get_feedback():
+    data = read_data()
+    return jsonify({"feedback": data.get("feedback", [])})
+
+# ════════════════════════════════════════
+#  RESET
+# ════════════════════════════════════════
+
+@app.route("/api/reset/patient", methods=["POST"])
+def reset_patient():
+    chat_histories["patient"] = []
+    return jsonify({"status": "reset"})
+
+@app.route("/api/reset/admin", methods=["POST"])
+def reset_admin():
+    chat_histories["admin"] = []
+    return jsonify({"status": "reset"})
 
 # ════════════════════════════════════════
 #  HOME
