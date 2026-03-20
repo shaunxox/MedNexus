@@ -10,13 +10,13 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app,origins="*")
+CORS(app, origins="*")
 
 # ════════════════════════════════════════
 #  OPENROUTER CONFIG
 # ════════════════════════════════════════
 
-OPENROUTER_API_KEY = os.getenv("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")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 MODEL_NAME = "mistralai/mistral-7b-instruct:free"
@@ -169,10 +169,8 @@ def chat_with_agent(agent, user_message, system_prompt):
 
         messages.append({"role": "user", "content": user_message})
 
-        # PRIMARY MODEL
         data = openrouter_chat(messages, MODEL_NAME)
 
-        # FALLBACK if error
         if "error" in data:
             print(f"Primary model failed: {data['error']} — trying fallback")
             data = openrouter_chat(messages, FALLBACK_MODEL)
@@ -233,7 +231,6 @@ def login():
         return jsonify({"error": "Email and password required"}), 400
 
     data = read_data()
-
     user = next((u for u in data["users"] if u["email"] == email), None)
 
     if not user or user["password"] != password:
@@ -256,11 +253,7 @@ def doctor_login():
     if password != DOCTOR_PASSWORD:
         return jsonify({"error": "Invalid password"}), 401
 
-    return jsonify({
-        "status": "success",
-        "role":   "doctor",
-        "name":   "Doctor"
-    })
+    return jsonify({"status": "success", "role": "doctor", "name": "Doctor"})
 
 # ════════════════════════════════════════
 #  AUTH — ADMIN (password only)
@@ -277,11 +270,7 @@ def admin_login():
     if password != ADMIN_PASSWORD:
         return jsonify({"error": "Invalid password"}), 401
 
-    return jsonify({
-        "status": "success",
-        "role":   "admin",
-        "name":   "Admin"
-    })
+    return jsonify({"status": "success", "role": "admin", "name": "Admin"})
 
 # ════════════════════════════════════════
 #  PATIENT AGENT
@@ -305,8 +294,6 @@ def patient():
             doctor, specialty = info.split("|")
 
             data = read_data()
-
-            # Only count waiting tokens for accurate position/wait_time
             waiting_count = len([q for q in data["queue"] if q["status"] == "waiting"])
 
             token = {
@@ -378,7 +365,6 @@ def queue_done(token):
         if item["token"] == token:
             item["status"] = "done"
             break
-    # Recalculate positions for remaining waiting patients
     position = 1
     for item in data["queue"]:
         if item["status"] == "waiting":
@@ -432,18 +418,6 @@ Prescription:
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ════════════════════════════════════════
-#  PRESCRIPTION
-# ════════════════════════════════════════
-
-@app.route("/api/prescription", methods=["GET"])
-def get_prescription():
-    token = request.args.get("token", type=int)
-    data = read_data()
-    for item in data["queue"]:
-        if item["token"] == token:
-            return jsonify({"prescription": item.get("prescription", None)})
-    return jsonify({"prescription": None})
 
 @app.route("/api/prescription/save", methods=["POST"])
 def save_prescription():
@@ -467,7 +441,7 @@ def save_prescription():
 # ════════════════════════════════════════
 
 @app.route("/api/stats", methods=["GET"])
-def stats():
+def get_stats():
     data = read_data()
     stats = data["stats"]
     stats["pending_tokens"]  = len([q for q in data["queue"] if q["status"] == "waiting"])
@@ -483,6 +457,7 @@ def get_doctors():
     data = read_data()
     return jsonify({"doctors": data["doctors"]})
 
+
 @app.route("/api/doctors/add", methods=["POST"])
 def add_doctor():
     body = request.get_json()
@@ -495,19 +470,21 @@ def add_doctor():
 
     data = read_data()
     doctor = {
-        "id": len(data["doctors"]) + 1,
-        "name": body.get("name"),
-        "specialty": body.get("specialty"),
-        "status": "on_duty"
+        "id":        max([d["id"] for d in data["doctors"]], default=0) + 1,
+        "name":      name,
+        "specialty": specialty,
+        "contact":   contact,
+        "status":    "on_duty"
     }
     data["doctors"].append(doctor)
     write_data(data)
     return jsonify({"status": "added", "doctor": doctor})
 
-@app.route("/api/doctors/remove/<int:id>", methods=["DELETE"])
-def remove_doctor(id):
+
+@app.route("/api/doctors/remove/<int:doctor_id>", methods=["DELETE"])
+def remove_doctor(doctor_id):
     data = read_data()
-    data["doctors"] = [d for d in data["doctors"] if d["id"] != id]
+    data["doctors"] = [d for d in data["doctors"] if d["id"] != doctor_id]
     write_data(data)
     return jsonify({"status": "removed"})
 
