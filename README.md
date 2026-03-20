@@ -1,4 +1,4 @@
-# MedNexus — AI Hospital Management System
+# MedNexus — The Future of Hospital Intelligence 
 
 > Multi-agent AI platform connecting patients, doctors, and hospital administrators through dedicated LLM-powered workflows.
 
