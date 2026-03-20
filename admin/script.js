@@ -2,13 +2,22 @@
 //  MEDNEXUS — admin/script.js
 // ════════════════════════════════════════
 
+// ── AUTH CHECK — kick out if not logged in as admin ──
+(function () {
+  const role = localStorage.getItem('mednexus-role');
+  if (role !== 'admin') {
+    window.location.href = '../index.html';
+  }
+})();
+
 // ── LOGOUT ──
 function logout() {
   localStorage.removeItem('mednexus-role');
+  localStorage.removeItem('mednexus-user');
   window.location.href = '../index.html';
 }
 
-const API = 'http://localhost:5000';
+const API = 'https://mednexus-tuz3.onrender.com';
 
 // ── THEME TOGGLE ──
 const themeToggle = document.getElementById('themeToggle');
@@ -101,7 +110,7 @@ async function loadQueue() {
     list.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">⚠️</div>
-        <p>Could not connect to backend. Make sure app.py is running on localhost:5000.</p>
+        <p>Could not connect to backend.</p>
       </div>`;
   }
 }
@@ -324,7 +333,7 @@ async function sendMessage() {
     appendMessage('ai', data.reply);
   } catch {
     removeTyping();
-    appendMessage('ai', '⚠️ Could not connect to backend. Make sure app.py is running.');
+    appendMessage('ai', '⚠️ Could not connect to backend.');
   }
 
   sendBtn.disabled = false;
@@ -369,7 +378,7 @@ async function resetChat() {
   document.getElementById('chatMessages').innerHTML = `
     <div class="chat-bubble ai">
       <div class="bubble-label">Admin Agent</div>
-      Hello! I'm your MedNexus Admin Assistant. Ask me anything about hospital operations — bed availability, queue status, staff, or resource optimization. 🏥
+      Hello! I'm your MedNexus Admin Assistant. Ask me anything about hospital operations. 🏥
     </div>`;
 }
 
@@ -396,8 +405,7 @@ function showToast(message, type = 'success') {
 }
 
 // ════════════════════════════════════════
-//  AUTO-REFRESH — Queue + Stats every 20s
-//  Only refreshes queue if queue tab is active
+//  AUTO-REFRESH
 // ════════════════════════════════════════
 
 setInterval(() => {
@@ -407,6 +415,5 @@ setInterval(() => {
   }
 }, 20000);
 
-// Load everything on page open
 loadStats();
 loadQueue();

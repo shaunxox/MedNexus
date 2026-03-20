@@ -2,13 +2,22 @@
 //  MEDNEXUS — patient/script.js
 // ════════════════════════════════════════
 
+// ── AUTH CHECK — kick out if not logged in as patient ──
+(function () {
+  const role = localStorage.getItem('mednexus-role');
+  if (role !== 'patient') {
+    window.location.href = '../index.html';
+  }
+})();
+
 // ── LOGOUT ──
 function logout() {
   localStorage.removeItem('mednexus-role');
+  localStorage.removeItem('mednexus-user');
   window.location.href = '../index.html';
 }
 
-const API = 'http://localhost:5000';
+const API = 'https://mednexus-tuz3.onrender.com';
 let selectedRating = 0;
 let currentToken = null;
 
@@ -73,7 +82,7 @@ async function sendMessage() {
     }
   } catch (err) {
     removeTyping();
-    appendMessage('ai', '⚠️ Could not connect to MedNexus backend. Make sure app.py is running on localhost:5000.');
+    appendMessage('ai', '⚠️ Could not connect to MedNexus backend.');
   }
 
   sendBtn.disabled = false;
@@ -166,7 +175,7 @@ async function summarizePrescription() {
     const data = await res.json();
     result.innerHTML = `<div class="prescription-content">${escapeHtml(data.reply)}</div>`;
   } catch (err) {
-    result.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not connect to backend. Make sure app.py is running.</p></div>`;
+    result.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not connect to backend.</p></div>`;
   }
 
   btn.disabled = false;
@@ -316,8 +325,7 @@ function showToast(message, type = 'success') {
 }
 
 // ════════════════════════════════════════
-//  AUTO-REFRESH — Token status every 15s
-//  Only refreshes if token tab is active
+//  AUTO-REFRESH
 // ════════════════════════════════════════
 
 setInterval(() => {
@@ -326,5 +334,4 @@ setInterval(() => {
   }
 }, 15000);
 
-// Load token on page open
 refreshToken();

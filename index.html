@@ -71,7 +71,7 @@
     <div class="about-card">
       <h3>The Three Agents</h3>
       <div class="agent-pill patient"><span class="dot"></span><div><div>Patient Agent</div><div class="agent-desc">Symptoms · Booking · Reminders · Navigation</div></div></div>
-      <div class="agent-pill doctor"><span class="dot"></span><div><div>Doctor Agent ⭐</div><div class="agent-desc">History Summary · Diagnosis Suggestions · Treatment Planning</div></div></div>
+      <div class="agent-pill doctor"><span class="dot"></span><div><div>Doctor Agent</div><div class="agent-desc">History Summary · Diagnosis Suggestions · Treatment Planning</div></div></div>
       <div class="agent-pill admin"><span class="dot"></span><div><div>Admin Agent</div><div class="agent-desc">Bed Availability · Staff Scheduling · Resource Allocation</div></div></div>
       <div class="about-note">All three agents are powered by the same underlying AI and share context with each other — so every part of the hospital is always in sync.</div>
     </div>
@@ -124,25 +124,75 @@
 <div class="modal-overlay" id="loginModal" onclick="handleOverlayClick(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeLogin()">×</button>
-    <h2>Welcome to MedNexus</h2>
-    <p class="modal-sub">Select your role to continue</p>
-    <div class="role-cards">
-      <a href="#" class="role-card patient" onclick="selectRole('patient')">
-        <span class="role-emoji">🧑‍🦽</span>
-        <div><div class="role-name">Patient</div><div class="role-hint">Book appointments, track health</div></div>
-        <span class="role-arrow">→</span>
-      </a>
-      <a href="#" class="role-card doctor" onclick="selectRole('doctor')">
-        <span class="role-emoji">👨‍⚕️</span>
-        <div><div class="role-name">Doctor</div><div class="role-hint">View patient queue, diagnose</div></div>
-        <span class="role-arrow">→</span>
-      </a>
-      <a href="#" class="role-card admin" onclick="selectRole('admin')">
-        <span class="role-emoji">🏥</span>
-        <div><div class="role-name">Administrator</div><div class="role-hint">Manage resources, staff, beds</div></div>
-        <span class="role-arrow">→</span>
-      </a>
+
+    <!-- SCREEN 1: Role Selection -->
+    <div id="screen-role">
+      <h2>Welcome to MedNexus</h2>
+      <p class="modal-sub">Select your role to continue</p>
+      <div class="role-cards">
+        <a href="#" class="role-card patient" onclick="selectRole('patient'); return false;">
+          <span class="role-emoji">🧑‍🦽</span>
+          <div><div class="role-name">Patient</div><div class="role-hint">Book appointments, track health</div></div>
+          <span class="role-arrow">→</span>
+        </a>
+        <a href="#" class="role-card doctor" onclick="selectRole('doctor'); return false;">
+          <span class="role-emoji">👨‍⚕️</span>
+          <div><div class="role-name">Doctor</div><div class="role-hint">View patient queue, diagnose</div></div>
+          <span class="role-arrow">→</span>
+        </a>
+        <a href="#" class="role-card admin" onclick="selectRole('admin'); return false;">
+          <span class="role-emoji">🏥</span>
+          <div><div class="role-name">Administrator</div><div class="role-hint">Manage resources, staff, beds</div></div>
+          <span class="role-arrow">→</span>
+        </a>
+      </div>
     </div>
+
+    <!-- SCREEN 2: Patient Login / Register -->
+    <div id="screen-patient" style="display:none;">
+      <button class="modal-back" onclick="showScreen('role')">← Back</button>
+      <h2>Patient Portal</h2>
+      <p class="modal-sub">Login or create a new account</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+      </div>
+      <div id="form-login">
+        <input type="email" id="patient-login-email" placeholder="Email address" />
+        <input type="password" id="patient-login-password" placeholder="Password" />
+        <div id="patient-login-error" class="auth-error"></div>
+        <button class="btn-primary full-width" onclick="patientLogin()">Login →</button>
+      </div>
+      <div id="form-register" style="display:none;">
+        <input type="text" id="patient-reg-name" placeholder="Full name" />
+        <input type="text" id="patient-reg-age" placeholder="Age" />
+        <input type="email" id="patient-reg-email" placeholder="Email address" />
+        <input type="password" id="patient-reg-password" placeholder="Password" />
+        <div id="patient-reg-error" class="auth-error"></div>
+        <button class="btn-primary full-width" onclick="patientRegister()">Create Account →</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: Doctor Password -->
+    <div id="screen-doctor" style="display:none;">
+      <button class="modal-back" onclick="showScreen('role')">← Back</button>
+      <h2>Doctor Portal</h2>
+      <p class="modal-sub">Enter your access password to continue</p>
+      <input type="password" id="doctor-password" placeholder="Enter password" />
+      <div id="doctor-error" class="auth-error"></div>
+      <button class="btn-primary full-width" onclick="doctorLogin()">Access Portal →</button>
+    </div>
+
+    <!-- SCREEN 4: Admin Password -->
+    <div id="screen-admin" style="display:none;">
+      <button class="modal-back" onclick="showScreen('role')">← Back</button>
+      <h2>Admin Portal</h2>
+      <p class="modal-sub">Enter your access password to continue</p>
+      <input type="password" id="admin-password" placeholder="Enter password" />
+      <div id="admin-error" class="auth-error"></div>
+      <button class="btn-primary full-width" onclick="adminLogin()">Access Portal →</button>
+    </div>
+
   </div>
 </div>
 

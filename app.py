@@ -10,13 +10,13 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,origins="*")
 
 # ════════════════════════════════════════
 #  OPENROUTER CONFIG
 # ════════════════════════════════════════
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.getenv("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")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 MODEL_NAME = "mistralai/mistral-7b-instruct:free"
