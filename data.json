@@ -1,0 +1,17 @@
+{
+  "users": [],
+  "doctors": [
+    { "id": 1, "name": "Dr. Aisha Rao", "specialty": "General Physician", "status": "on_duty" },
+    { "id": 2, "name": "Dr. Karan Mehta", "specialty": "Cardiologist", "status": "on_duty" },
+    { "id": 3, "name": "Dr. Priya Nair", "specialty": "Dermatologist", "status": "on_duty" },
+    { "id": 4, "name": "Dr. Rohan Shetty", "specialty": "Orthopedist", "status": "off_duty" }
+  ],
+  "queue": [],
+  "stats": {
+    "total_beds": 120,
+    "occupied_beds": 87,
+    "icu_total": 20,
+    "icu_occupied": 14
+  },
+  "feedback": []
+}
